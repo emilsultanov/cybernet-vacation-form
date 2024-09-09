@@ -16,6 +16,8 @@ import {
 import { DatePickerInput } from "@mantine/dates";
 import { IconInfoCircle } from "@tabler/icons-react";
 import { useForm } from "@mantine/form";
+import {useMutation} from "react-query";
+import {fetchVacationFormAsPdf} from "./api.js";
 
 const vacationTypes = [
   {
@@ -36,33 +38,33 @@ const vacationTypes = [
   },
 ];
 
-function App() {
+export function App() {
   const { key, onSubmit, getInputProps } = useForm({
     method: "uncontrolled",
     initialValues: {
-      firstName: "",
-      lastName: "",
-      position: "",
-      branch: "",
-      vacationType: null,
-      vacationStartDate: null,
-      vacationEndDate: null,
-      workDateAfterVacation: null,
-      applicationSubmitDate: null,
-      hrDepartment: "Səidə Hüseynova",
-      substitute: "",
-      departmentHead: "",
-      manager: "",
-      productOwner: "",
+      "firstname": "Emil",
+      "lastname": "Sultanov",
+      "position": "senior frontend developer",
+      "section": "frontend",
+      "vacationType": "M",
+      "vacationStartDate": new Date("2024-09-09T20:00:00.000Z"),
+      "vacationEndDate": new Date("2024-09-16T20:00:00.000Z"),
+      "workStartDate": new Date("2024-09-17T20:00:00.000Z"),
+      "submissionDate": new Date("2024-09-09T20:00:00.000Z"),
+      "hr": "Səidə Hüseynova",
+      "substitutePerson": "Elcan Bayramov",
+      "sectionHead": "Cavanshir Huseynov",
+      "scrum": "Yashar Ismayilov",
+      "po": "Naile Quliyeva"
     },
     validate: {
-      firstName: (value) =>
+      firstname: (value) =>
         value.length > 0 ? null : "Ad xanası boş ola bilməz",
-      lastName: (value) =>
+      lastname: (value) =>
         value.length > 0 ? null : "Soyad xanası boş ola bilməz",
       position: (value) =>
         value.length > 0 ? null : "Vəzifə xanası boş ola bilməz",
-      branch: (value) =>
+      section: (value) =>
         value.length > 0 ? null : "Şöbə xanası boş ola bilməz",
       vacationType: (value) =>
         value !== null ? null : "Məzuniyyətin növü xanası boş ola bilməz",
@@ -74,23 +76,29 @@ function App() {
         value !== null
           ? null
           : "Məzuniyyətin bitmə tarixi xanası boş ola bilməz",
-      workDateAfterVacation: (value) =>
+      workStartDate: (value) =>
         value !== null ? null : "İşə başlanma tarixi xanası boş ola bilməz",
-      substitute: (value) =>
+      substitutePerson: (value) =>
         value.length > 0 ? null : "Əvəz edən şəxs xanası boş ola bilməz",
-      departmentHead: (value) =>
+      sectionHead: (value) =>
         value.length > 0 ? null : "Şöbə rəhbəri xanası boş ola bilməz",
     },
   });
 
+  const {isLoading, mutate} = useMutation({
+      mutationFn: fetchVacationFormAsPdf,
+      onSuccess(response){
+        console.log('response', response)
+      }
+  });
+
   const handleSuccess = (values, event) => {
     event.preventDefault();
-    console.log("values", values);
+    mutate(values);
   };
 
   const handleFailure = (errors, values, event) => {
     event.preventDefault();
-    console.error("Validation errors:", errors);
   };
 
   return (
@@ -118,9 +126,9 @@ function App() {
                   withAsterisk
                   label="Ad"
                   placeholder="Adınızı daxil edin"
-                  name={"firstName"}
-                  key={key("firstName")}
-                  {...getInputProps("firstName")}
+                  name={"firstname"}
+                  key={key("firstname")}
+                  {...getInputProps("firstname")}
                 />
               </Grid.Col>
               <Grid.Col span={{ base: 12, xs: 6, sm: 4 }}>
@@ -128,8 +136,8 @@ function App() {
                   withAsterisk
                   label="Soyad"
                   placeholder="Soyadınızı daxil edin"
-                  name={"lastName"}
-                  {...getInputProps("lastName")}
+                  name={"lastname"}
+                  {...getInputProps("lastname")}
                 />
               </Grid.Col>
               <Grid.Col span={{ base: 12, xs: 6, sm: 4 }}>
@@ -146,8 +154,8 @@ function App() {
                   withAsterisk
                   label="Şöbə"
                   placeholder="Şöbə adını daxil edin"
-                  name={"branch"}
-                  {...getInputProps("branch")}
+                  name={"section"}
+                  {...getInputProps("section")}
                 />
               </Grid.Col>
             </Grid>
@@ -196,8 +204,8 @@ function App() {
                   withAsterisk
                   label="İşə başlama tarixi"
                   placeholder="Tarix seçin"
-                  name={"workDateAfterVacation"}
-                  {...getInputProps("workDateAfterVacation")}
+                  name={"workStartDate"}
+                  {...getInputProps("workStartDate")}
                 />
               </Grid.Col>
               <Grid.Col span={{ base: 12, xs: 6, sm: 4 }}>
@@ -205,8 +213,8 @@ function App() {
                   clearable
                   label="Ərizənin doldurulma tarixi"
                   placeholder="Tarix seçin"
-                  name={"applicationSubmitDate"}
-                  {...getInputProps("applicationSubmitDate")}
+                  name={"submissionDate"}
+                  {...getInputProps("submissionDate")}
                 />
               </Grid.Col>
             </Grid>
@@ -227,8 +235,8 @@ function App() {
                   label="İnsan resursları şöbəsi"
                   disabled
                   withAsterisk
-                  name={"hrDepartment"}
-                  {...getInputProps("hrDepartment")}
+                  name={"hr"}
+                  {...getInputProps("hr")}
                 />
               </Grid.Col>
               <Grid.Col span={{ base: 12, xs: 6, sm: 4 }}>
@@ -236,8 +244,8 @@ function App() {
                   withAsterisk
                   label="Əvəz edən şəxs"
                   placeholder="Əvəz edən şəxsin adını daxil edin"
-                  name={"substitute"}
-                  {...getInputProps("substitute")}
+                  name={"substitutePerson"}
+                  {...getInputProps("substitutePerson")}
                 />
               </Grid.Col>
               <Grid.Col span={{ base: 12, xs: 6, sm: 4 }}>
@@ -245,24 +253,24 @@ function App() {
                   withAsterisk
                   label="Şöbə rəhbəri"
                   placeholder="Şöbə rəhbərinin adını daxil edin"
-                  name="departmentHead"
-                  {...getInputProps("departmentHead")}
+                  name="sectionHead"
+                  {...getInputProps("sectionHead")}
                 />
               </Grid.Col>
               <Grid.Col span={{ base: 12, xs: 6, sm: 4 }}>
                 <TextInput
                   label="Agile layihə meneceri"
                   placeholder="Menecerin adını daxil edin"
-                  name="manager"
-                  {...getInputProps("manager")}
+                  name="scrum"
+                  {...getInputProps("scrum")}
                 />
               </Grid.Col>
               <Grid.Col span={{ base: 12, xs: 6, sm: 4 }}>
                 <TextInput
                   label="Məhsul sahibi"
                   placeholder="Məhsul sahibinin adını daxil edin"
-                  name="productOwner"
-                  {...getInputProps("productOwner")}
+                  name="po"
+                  {...getInputProps("po")}
                 />
               </Grid.Col>
             </Grid>
@@ -278,7 +286,7 @@ function App() {
               </Grid.Col>
               <Grid.Col span={12}>
                 <Group justify="flex-end" mt="md">
-                  <Button variant="filled" type="submit">
+                  <Button variant="filled" type="submit" loading={isLoading}>
                     Göndər
                   </Button>
                 </Group>
@@ -291,5 +299,3 @@ function App() {
     </main>
   );
 }
-
-export default App;
