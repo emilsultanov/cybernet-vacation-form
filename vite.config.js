@@ -5,13 +5,20 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server:{
-    open: true,
+    open: false,
+    host: true,
     port: 3001,
     proxy:{
       '/vacation': {
-        target: 'http://10.153.0.51:8080',
+        target: 'http://backend:8080',
         changeOrigin: true,
       }
     }
+  },
+
+  preview: {
+    host: '127.0.0.1',  // Listen on all interfaces for external access
+    port: 4173,       // Vite default port
+    open: false       // Automatically open browser
   }
 })

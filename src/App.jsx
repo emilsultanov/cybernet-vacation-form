@@ -42,20 +42,20 @@ export function App() {
   const { key, onSubmit, getInputProps } = useForm({
     method: "uncontrolled",
     initialValues: {
-      "firstname": "Emil",
-      "lastname": "Sultanov",
-      "position": "senior frontend developer",
-      "section": "frontend",
-      "vacationType": "M",
-      "vacationStartDate": new Date("2024-09-09T20:00:00.000Z"),
-      "vacationEndDate": new Date("2024-09-16T20:00:00.000Z"),
-      "workStartDate": new Date("2024-09-17T20:00:00.000Z"),
-      "submissionDate": new Date("2024-09-09T20:00:00.000Z"),
+      "firstname": "",
+      "lastname": "",
+      "position": "",
+      "section": "",
+      "vacationType": null,
+      "vacationStartDate":null,
+      "vacationEndDate": null,
+      "workStartDate": null,
+      "submissionDate": null,
       "hr": "Səidə Hüseynova",
-      "substitutePerson": "Elcan Bayramov",
-      "sectionHead": "Cavanshir Huseynov",
-      "scrum": "Yashar Ismayilov",
-      "po": "Naile Quliyeva"
+      "substitutePerson": "",
+      "sectionHead": "",
+      "scrum": "",
+      "po": ""
     },
     validate: {
       firstname: (value) =>
